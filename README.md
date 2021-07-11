@@ -51,8 +51,8 @@ func main() {
     })
 
     err := c.Initialize()
-	if err != nil {
-		log.Fatal(err)
-	}
+    if err != nil {
+	log.Fatal(err)
+    }
 }
 ```
