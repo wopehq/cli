@@ -16,7 +16,6 @@ type ParameterTest struct {
 	Command                *Command
 	Parameter              Parameter
 	Args                   []string
-	ParameterType          string
 	ExpectedParameterValue interface{}
 }
 
