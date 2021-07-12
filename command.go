@@ -3,7 +3,6 @@ package cli
 import (
 	"errors"
 	"flag"
-	"os"
 	"strconv"
 
 	"github.com/fatih/color"
@@ -36,31 +35,32 @@ func NewCommand(name string, use string, description string) *Command {
 	}
 
 	fs := flag.NewFlagSet(name, flag.ContinueOnError)
-	fs.Usage = command.ShowHelp
+	fs.Usage = command.Help().ShowHelp
 	command.Flagset = fs
 
 	return command
 }
 
 // ShowHelp prints the usage of the command
-func (c *Command) ShowHelp() {
-	green.Printf("Usage: %s \n\n", c.Use)
+func (c *Command) Help() *Help {
+	var help Help
+	help.Usage = green.Sprintf("Usage: %s \n\n", c.Use)
 
 	if len(c.Commands) > 0 {
-		bold.Printf("Commands: \n")
+		help.Commands += bold.Sprintf("Commands: \n")
 		for _, command := range c.Commands {
-			bold.Printf("%-20s %s \n", command.Name, command.Use)
+			help.Commands += bold.Sprintf("%-20s %s \n", command.Name, command.Use)
 		}
 	}
 
 	if len(c.Parameters) > 0 {
-		bold.Printf("Parameters: \n")
+		help.Parameters += bold.Sprintf("Parameters: \n")
 		for _, parameter := range c.Parameters {
-			bold.Printf("--%s, -%-10s %-30s %s \n", parameter.Name, parameter.Shortname, parameter.Use, parameter.Description)
+			help.Parameters += bold.Sprintf("--%s, -%-10s %-30s %s \n", parameter.Name, parameter.Shortname, parameter.Use, parameter.Description)
 		}
 	}
 
-	os.Exit(0)
+	return &help
 }
 
 // Do sets the command's handler function
