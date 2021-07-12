@@ -26,6 +26,10 @@ func (c *Configurator) SetMainCommand(command *Command) {
 
 // FindHelp recognizes if any help command is received and prints the usage
 func (c *Configurator) FindHelp() error {
+	if len(c.Args) == 0 {
+		c.Command.ShowHelp()
+	}
+
 	if len(c.Args) > 0 {
 		if c.Args[0] == "help" {
 			if len(c.Args) == 1 {
