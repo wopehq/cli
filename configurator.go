@@ -2,6 +2,7 @@ package cli
 
 import (
 	"errors"
+	"fmt"
 )
 
 var ErrCommandNotFound = errors.New("command is not found in configurator's commands")
@@ -25,27 +26,29 @@ func (c *Configurator) SetMainCommand(command *Command) {
 }
 
 // FindHelp recognizes if any help command is received and prints the usage
-func (c *Configurator) FindHelp() error {
+func (c *Configurator) FindHelp() (*Help, error) {
+	var help *Help
 	if len(c.Args) == 0 {
-		c.Command.ShowHelp()
+		help = c.Command.Help()
 	}
 
 	if len(c.Args) > 0 {
 		if c.Args[0] == "help" {
 			if len(c.Args) == 1 {
-				c.Command.ShowHelp()
+				help = c.Command.Help()
 			}
 
 			if len(c.Args) > 1 {
 				cmd, err := c.ParseCommand(c.Args[1:])
 				if err != nil {
-					return err
+					return nil, err
 				}
-				cmd.ShowHelp()
+				help = cmd.Help()
 			}
 		}
 	}
-	return nil
+
+	return help, nil
 }
 
 // ParseCommand returns the current command for example
@@ -57,9 +60,10 @@ func (c *Configurator) ParseCommand(args []string) (*Command, error) {
 		if isFlagArg(arg) {
 			break
 		}
+
 		cmd, exists := currentCommand.FindCommand(arg)
 		if !exists {
-			return currentCommand, ErrCommandNotFound
+			return currentCommand, fmt.Errorf("%s %w", arg, ErrCommandNotFound)
 		}
 		currentCommand = cmd
 	}
@@ -68,11 +72,6 @@ func (c *Configurator) ParseCommand(args []string) (*Command, error) {
 
 // Initialize prints if any help command is received or runs the wanted command
 func (c *Configurator) Initialize() error {
-	err := c.FindHelp()
-	if err != nil {
-		return err
-	}
-
 	if len(c.Args) > 0 {
 		cmd, err := c.ParseCommand(c.Args)
 		if err != nil {
