@@ -50,9 +50,15 @@ func main() {
         fmt.Println(messageParameter)
     })
 
+	help, err := c.FindHelp()
+	if err != nil {
+		log.Fatal(err)
+	}
+	help.ShowHelp()
+
     err := c.Initialize()
     if err != nil {
-	log.Fatal(err)
+        log.Fatal(err)
     }
 }
 ```
