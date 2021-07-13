@@ -72,12 +72,12 @@ func (c *Configurator) ParseCommand(args []string) (*Command, error) {
 
 // Initialize prints if any help command is received or runs the wanted command
 func (c *Configurator) Initialize() error {
-	if len(c.Args) > 0 {
-		cmd, err := c.ParseCommand(c.Args)
-		if err != nil {
-			return err
-		}
+	cmd, err := c.ParseCommand(c.Args)
+	if err != nil {
+		return err
+	}
 
+	if len(c.Args) > 0 {
 		args := c.Args[1:]
 		if len(c.Args) == 1 {
 			args = c.Args
@@ -87,8 +87,9 @@ func (c *Configurator) Initialize() error {
 		if err != nil {
 			return err
 		}
-		cmd.handler(cmd)
 	}
+
+	cmd.handler(cmd)
 
 	return nil
 }
