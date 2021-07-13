@@ -39,7 +39,7 @@ func (c *Configurator) FindHelp() (*Help, error) {
 			}
 
 			if len(c.Args) > 1 {
-				cmd, err := c.ParseCommand(c.Args[1:])
+				cmd, _, err := c.ParseCommand(c.Args[1:])
 				if err != nil {
 					return nil, err
 				}
@@ -54,8 +54,9 @@ func (c *Configurator) FindHelp() (*Help, error) {
 // ParseCommand returns the current command for example
 // "app run concurrent -v"
 // concurrent is the current command here
-func (c *Configurator) ParseCommand(args []string) (*Command, error) {
+func (c *Configurator) ParseCommand(args []string) (*Command, int, error) {
 	currentCommand := c.Command
+	var position int
 	for _, arg := range args {
 		if isFlagArg(arg) {
 			break
@@ -63,30 +64,29 @@ func (c *Configurator) ParseCommand(args []string) (*Command, error) {
 
 		cmd, exists := currentCommand.FindCommand(arg)
 		if !exists {
-			return currentCommand, fmt.Errorf("%s %w", arg, ErrCommandNotFound)
+			return currentCommand, position, fmt.Errorf("%s %w", arg, ErrCommandNotFound)
 		}
 		currentCommand = cmd
+		position += 1
 	}
-	return currentCommand, nil
+	return currentCommand, position, nil
 }
 
 // Initialize prints if any help command is received or runs the wanted command
 func (c *Configurator) Initialize() error {
-	cmd, err := c.ParseCommand(c.Args)
+	args := c.Args
+	cmd, position, err := c.ParseCommand(args)
 	if err != nil {
 		return err
 	}
 
-	if len(c.Args) > 0 {
-		args := c.Args[1:]
-		if len(c.Args) == 1 {
-			args = c.Args
-		}
+	if len(c.Args) > 0 && cmd != c.Command {
+		args = c.Args[position:]
+	}
 
-		err = cmd.Flagset.Parse(args)
-		if err != nil {
-			return err
-		}
+	err = cmd.Flagset.Parse(args)
+	if err != nil {
+		return err
 	}
 
 	cmd.handler(cmd)

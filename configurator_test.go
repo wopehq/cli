@@ -163,7 +163,7 @@ func TestParseCommand(t *testing.T) {
 			}
 
 			test.Configurator.SetMainCommand(test.Command)
-			command, err := test.Configurator.ParseCommand(test.Configurator.Args)
+			command, _, err := test.Configurator.ParseCommand(test.Configurator.Args)
 			if err != nil {
 				t.Fatal(err)
 			}
