@@ -47,17 +47,17 @@ func main() {
     mainCommand := cli.NewCommand("app", "app [command] [flags]", "description about the app")
     c.SetMainCommand(mainCommand)
 
-    hi := cli.NewCommand("print", "print [flags]", "prints the values")
-    mainCommand.AddCommand(hi)
+    say := cli.NewCommand("say", "say [flags]", "prints the values")
+    mainCommand.AddCommand(say)
 
     var messageParameter string
-    hi.AddStringParameter(&cli.Parameter{
+    say.AddStringParameter(&cli.Parameter{
         Use: "app print --message [value]",
         Name: "message",
         Shortname: "m",
     }, &messageParameter, "hello world")
 
-    hi.Do(func(cmd *cli.Command) {
+    say.Do(func(cmd *cli.Command) {
         fmt.Println(messageParameter)
     })
 
