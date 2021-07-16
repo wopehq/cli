@@ -67,10 +67,11 @@ func main() {
     }
     help.ShowHelp()
 
-    err := c.Initialize()
+    cmd, err := c.Parse()
     if err != nil {
         log.Fatal(err)
     }
+    cmd.Run()
 }
 ```
 
@@ -101,12 +102,13 @@ hi.Do(func (cmd *cli.Command) {
     fmt.Println("hi")
 })
 ```
-Initialize the configurator after all things are done
+Parse the args after all things are done and run the returned command
 ```go
-err = c.Initialize()
+cmd, err := c.Parse()
 if err != nil {
 	log.Fatal(err)
 }
+cmd.Run()
 ```
 Now when you type `app hi`, application will print a `"hi"` message.
 
@@ -143,10 +145,11 @@ if err != nil {
 }
 help.ShowHelp()
 
-err = c.Initialize()
+cmd, err := c.Parse()
 if err != nil {
 	log.Fatal(err)
 }
+cmd.Run()
 ```
 ## Contribute
 Pull requests are welcome. please open an issue first to discuss what you would like to change.
