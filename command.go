@@ -68,6 +68,10 @@ func (c *Command) Do(handler func(cmd *Command)) {
 	c.handler = handler
 }
 
+func (c *Command) Run() {
+	c.handler(c)
+}
+
 // FindCommand searches the sub commands of the command
 func (c *Command) FindCommand(name string) (*Command, bool) {
 	for _, command := range c.Commands {
