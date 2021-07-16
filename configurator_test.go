@@ -115,10 +115,11 @@ func TestInitialize(t *testing.T) {
 
 			test.Configurator.SetMainCommand(test.Command)
 
-			err := test.Configurator.Initialize()
+			cmd, err := test.Configurator.Parse()
 			if err != nil {
 				t.Fatal(err)
 			}
+			cmd.Run()
 
 			if commandName == "" {
 				t.Error("no any command's handler function is called")

@@ -72,12 +72,12 @@ func (c *Configurator) ParseCommand(args []string) (*Command, int, error) {
 	return currentCommand, position, nil
 }
 
-// Initialize prints if any help command is received or runs the wanted command
-func (c *Configurator) Initialize() error {
+// Parse parses the wanted command and its flags
+func (c *Configurator) Parse() (*Command, error) {
 	args := c.Args
 	cmd, position, err := c.ParseCommand(args)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if len(c.Args) > 0 && cmd != c.Command {
@@ -86,12 +86,10 @@ func (c *Configurator) Initialize() error {
 
 	err = cmd.Flagset.Parse(args)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	cmd.handler(cmd)
-
-	return nil
+	return cmd, nil
 }
 
 // isFlagArg returns if the given arg is a flag or not
