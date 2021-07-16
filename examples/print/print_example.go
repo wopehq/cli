@@ -34,8 +34,9 @@ func main() {
 	}
 	help.ShowHelp()
 
-	err = c.Initialize()
+	cmd, err := c.Parse()
 	if err != nil {
 		log.Fatal(err)
 	}
+	cmd.Run()
 }
