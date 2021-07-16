@@ -25,7 +25,7 @@ func (c *Configurator) SetMainCommand(command *Command) {
 	c.Command = command
 }
 
-// FindHelp recognizes if any help command is received and prints the usage
+// FindHelp recognizes if any help command is received and returns a help
 func (c *Configurator) FindHelp() (*Help, error) {
 	var help *Help
 	if len(c.Args) == 0 && c.Command.handler == nil {
