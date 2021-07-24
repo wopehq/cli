@@ -9,10 +9,7 @@ import (
 )
 
 func main() {
-	c := cli.NewConfigurator(os.Args[1:])
-
 	mainCommand := cli.NewCommand("app", "app [command] [flags]", "description about the app")
-	c.SetMainCommand(mainCommand)
 
 	printCommand := cli.NewCommand("print", "print [flags]", "prints the values")
 	mainCommand.AddCommand(printCommand)
@@ -28,15 +25,19 @@ func main() {
 		fmt.Println(messageParameter)
 	})
 
-	help, err := c.FindHelp()
+	help, err := mainCommand.FindHelp(os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}
 	help.ShowHelp()
 
-	cmd, err := c.Parse()
+	cmd, err := mainCommand.Parse(os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
 	}
-	cmd.Run()
+
+	err = cmd.Run()
+	if err != nil {
+		cmd.Help().ShowHelp()
+	}
 }
