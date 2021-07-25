@@ -58,21 +58,21 @@ func main() {
         fmt.Println(messageParameter)
     })
 
-	help, err := mainCommand.FindHelp(os.Args[1:])
-	if err != nil {
-		log.Fatal(err)
-	}
-	help.ShowHelp()
+    help, err := mainCommand.FindHelp(os.Args[1:])
+    if err != nil {
+        log.Fatal(err)
+    }
+    help.ShowHelp()
 
-	cmd, err := mainCommand.Parse(os.Args[1:])
-	if err != nil {
-		log.Fatal(err)
-	}
+    cmd, err := mainCommand.Parse(os.Args[1:])
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	err = cmd.Run()
-	if err != nil {
-		cmd.Help().ShowHelp()
-	}
+    err = cmd.Run()
+    if err != nil {
+        cmd.Help().ShowHelp()
+    }
 }
 ```
 
@@ -104,12 +104,12 @@ Parse the args after all things are done and run the returned command
 ```go
 cmd, err := mainCommand.Parse()
 if err != nil {
-	log.Fatal(err)
+    log.Fatal(err)
 }
 
 err = cmd.Run()
 if err != nil {
-	cmd.Help().ShowHelp()
+    cmd.Help().ShowHelp()
 }
 ```
 Now when you type `app hi`, application will print a `"hi"` message.
@@ -143,7 +143,7 @@ If you want to print a help message for the command you need to run the `FindHel
 ```go
 help, err := mainCommand .FindHelp()
 if err != nil {
-	log.Fatal(err)
+    log.Fatal(err)
 }
 help.ShowHelp()
 ```
@@ -151,7 +151,7 @@ When running the wanted command parsing errors can be occur, so you can make an 
 ```go
 err = cmd.Run()
 if err != nil {
-	cmd.Help().ShowHelp()
+    cmd.Help().ShowHelp()
 }
 ```
 ## Contribute
