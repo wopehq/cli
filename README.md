@@ -102,7 +102,7 @@ hi.Do(func (cmd *cli.Command) {
 ```
 Parse the args after all things are done and run the returned command
 ```go
-cmd, err := mainCommand.Parse()
+cmd, err := mainCommand.Parse(os.Args[1:])
 if err != nil {
     log.Fatal(err)
 }
@@ -141,7 +141,7 @@ printCommand.AddStringParameter(&cli.Parameter{
 ## Help Messages
 If you want to print a help message for the command you need to run the `FindHelp()` method before configurator initialization.
 ```go
-help, err := mainCommand .FindHelp()
+help, err := mainCommand.FindHelp(os.Args[1:])
 if err != nil {
     log.Fatal(err)
 }
