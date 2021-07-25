@@ -42,10 +42,7 @@ package main
 import "github.com/teamseodo/cli"
 
 func main() {
-    c := cli.NewConfigurator(os.Args[1:])
-
     mainCommand := cli.NewCommand("app", "app [command] [flags]", "description about the app")
-    c.SetMainCommand(mainCommand)
 
     say := cli.NewCommand("say", "say [flags]", "prints the values")
     mainCommand.AddCommand(say)
@@ -61,17 +58,21 @@ func main() {
         fmt.Println(messageParameter)
     })
 
-    help, err := c.FindHelp()
-    if err != nil {
-        log.Fatal(err)
-    }
-    help.ShowHelp()
+	help, err := mainCommand.FindHelp(os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	help.ShowHelp()
 
-    cmd, err := c.Parse()
-    if err != nil {
-        log.Fatal(err)
-    }
-    cmd.Run()
+	cmd, err := mainCommand.Parse(os.Args[1:])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = cmd.Run()
+	if err != nil {
+		cmd.Help().ShowHelp()
+	}
 }
 ```
 
@@ -80,10 +81,7 @@ You need to create a configurator to use commands or anything in this package. C
 
 You can create a main command like that,
 ```go
-c := cli.NewConfigurator(os.Args[1:])
-
 mainCommand := cli.NewCommand("app", "app [command] [flags]", "description about the app")
-c.SetMainCommand(mainCommand)
 ```
 
 Every command can have multiple sub commands, you can add a subcommand like that
@@ -104,11 +102,15 @@ hi.Do(func (cmd *cli.Command) {
 ```
 Parse the args after all things are done and run the returned command
 ```go
-cmd, err := c.Parse()
+cmd, err := mainCommand.Parse()
 if err != nil {
 	log.Fatal(err)
 }
-cmd.Run()
+
+err = cmd.Run()
+if err != nil {
+	cmd.Help().ShowHelp()
+}
 ```
 Now when you type `app hi`, application will print a `"hi"` message.
 
@@ -139,17 +141,18 @@ printCommand.AddStringParameter(&cli.Parameter{
 ## Help Messages
 If you want to print a help message for the command you need to run the `FindHelp()` method before configurator initialization.
 ```go
-help, err := c.FindHelp()
+help, err := mainCommand .FindHelp()
 if err != nil {
 	log.Fatal(err)
 }
 help.ShowHelp()
-
-cmd, err := c.Parse()
+```
+When running the wanted command parsing errors can be occur, so you can make an error check when you run the wanted command and print a help.
+```go
+err = cmd.Run()
 if err != nil {
-	log.Fatal(err)
+	cmd.Help().ShowHelp()
 }
-cmd.Run()
 ```
 ## Contribute
 Pull requests are welcome. please open an issue first to discuss what you would like to change.
