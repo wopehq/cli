@@ -130,6 +130,10 @@ func (c *Command) Run() error {
 
 // FindHelp recognizes if any help command is received and returns a help
 func (c *Command) FindHelp(args []string) (*Help, error) {
+	if len(args) == 0 {
+		return nil, nil
+	}
+
 	var help *Help
 	if len(args) == 0 && c.handler == nil {
 		help = c.Help()
